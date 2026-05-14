@@ -1,0 +1,15 @@
+package com.smd.budgetman.vo;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserExpendsVo {
+    private Long userId;
+    private Long expendsId;
+}
