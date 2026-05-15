@@ -1,0 +1,18 @@
+package com.smd.budgetman.repository;
+
+import com.smd.budgetman.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    public User findByUserId(Long userId);
+
+    public User findByUserName(String username);
+
+    @Query("SELECT u FROM User u WHERE u.userName = ?1")
+    public User findUserByStatusAndName(String userName);
+
+    public User findByPhoneNumber(String phoneNumber);
+}

@@ -1,12 +1,12 @@
 package com.smd.budgetman.controller;
 
 import com.smd.budgetman.services.UserService;
-import com.smd.budgetman.vo.UserAuthorizeRequestVo;
-import com.smd.budgetman.vo.UserAuthorizeResponseVo;
-import com.smd.budgetman.vo.UserLoginRequestVo;
-import com.smd.budgetman.vo.UserRequestVo;
-import com.smd.budgetman.vo.UserTokenResponseVo;
-import com.smd.budgetman.vo.UserUpdateVo;
+import com.smd.budgetman.vo.UserVos.UserAuthorizeRequestVo;
+import com.smd.budgetman.vo.UserVos.UserAuthorizeResponseVo;
+import com.smd.budgetman.vo.UserVos.UserLoginRequestVo;
+import com.smd.budgetman.vo.UserVos.UserRequestVo;
+import com.smd.budgetman.vo.UserVos.UserTokenResponseVo;
+import com.smd.budgetman.vo.UserVos.UserUpdateVo;
 import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
