@@ -1,8 +1,8 @@
 package com.smd.budgetman.controller;
 
 import com.smd.budgetman.services.ExpendsService;
-import com.smd.budgetman.vo.ExpendsResponseVo;
-import com.smd.budgetman.vo.ExpendsVo;
+import com.smd.budgetman.vo.ExpendsVos.ExpendsResponseVo;
+import com.smd.budgetman.vo.ExpendsVos.ExpendsVo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

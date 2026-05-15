@@ -1,7 +1,7 @@
 package com.smd.budgetman.services;
 
-import com.smd.budgetman.vo.UserExpendsResponseVo;
-import com.smd.budgetman.vo.UserExpendsVo;
+import com.smd.budgetman.vo.UserVos.UserExpendsResponseVo;
+import com.smd.budgetman.vo.UserVos.UserExpendsVo;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
