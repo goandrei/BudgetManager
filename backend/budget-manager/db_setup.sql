@@ -15,6 +15,15 @@ CREATE TABLE user_login (
     token_expire_time varchar(255)
 );
 
+CREATE TABLE budget_table (
+    budget_id SERIAL PRIMARY KEY,
+    budget_name varchar(255),
+    commentary varchar(255),
+    create_by INTEGER REFERENCES user_table(user_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE user_budget_table (
     user_budget_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES user_table(user_id),
@@ -24,14 +33,16 @@ CREATE TABLE user_budget_table (
 alter table user_budget_table 
 add constraint uq_user_budget unique (user_id, budget_id);
 
-CREATE TABLE user_expends_table (
-    user_expends_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES user_table(user_id),
-    expends_id INTEGER REFERENCES expends_table(expends_id)
+CREATE TABLE expends_table (
+    expends_id SERIAL PRIMARY KEY,
+    expends_name VARCHAR(255),
+    budget_id INTEGER REFERENCES budget_table(budget_id),
+    paid_by INTEGER REFERENCES user_table(user_id),
+    amount double precision,
+    commentary VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-alter table user_expends_table 
-add constraint uq_user_expends unique (user_id, expends_id);
 
 ALTER TABLE user_table  
 ADD CONSTRAINT uq_username UNIQUE (user_name);

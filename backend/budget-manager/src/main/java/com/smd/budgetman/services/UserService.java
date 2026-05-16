@@ -5,8 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 import com.smd.budgetman.model.User;
 import com.smd.budgetman.model.UserLogin;
 import com.smd.budgetman.repository.UserLoginRepository;
@@ -21,33 +19,36 @@ import com.smd.budgetman.vo.UserVos.UserUpdateVo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserLoginRepository userLoginRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final SecurityConfig securityConfig;
+    private final BudgetService budgetService;
+    private final ExpendsService expendsService;
 
-    @Autowired
-    private UserLoginRepository userLoginRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private SecurityConfig securityConfig;
-
-    // TODO
-    // @Autowired
-    // private BudgetService budgetService;
-
-    // TODO
-    // @Autowired
-    // private ExpendsService expendsService;
+    public UserService(
+            UserRepository userRepository,
+            UserLoginRepository userLoginRepository,
+            PasswordEncoder passwordEncoder,
+            SecurityConfig securityConfig,
+            BudgetService budgetService,
+            ExpendsService expendsService) {
+        this.userRepository = userRepository;
+        this.userLoginRepository = userLoginRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.securityConfig = securityConfig;
+        this.budgetService = budgetService;
+        this.expendsService = expendsService;
+    }
 
     public UserRequestVo findByUserId(Long userId) {
 
@@ -173,7 +174,9 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token");
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (vo.getUsername() != null && !vo.getUsername().isBlank()) {
             user.setUserName(vo.getUsername());
@@ -201,8 +204,8 @@ public class UserService {
 
     public void deleteUser(Long userId) {
 
-        // TODO : delete expends belonging to this user
-        // TODO : delete budgets belonging to this user
+        expendsService.deleteExpendsByUserId(userId);
+        budgetService.deleteBudgetByUserId(userId);
 
         User user = userRepository
                 .findById(userId)

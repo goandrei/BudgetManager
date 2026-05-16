@@ -4,14 +4,16 @@ import com.smd.budgetman.services.ExpendsService;
 import com.smd.budgetman.vo.ExpendsVos.ExpendsResponseVo;
 import com.smd.budgetman.vo.ExpendsVos.ExpendsVo;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ExpendsController {
-    @Autowired
-    private ExpendsService expendsService;
+    private final ExpendsService expendsService;
+
+    public ExpendsController(ExpendsService expendsService) {
+        this.expendsService = expendsService;
+    }
 
     @GetMapping("/expends/{expendsId}")
     @CrossOrigin

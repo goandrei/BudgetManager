@@ -80,25 +80,6 @@ public class UserVos {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UserExpendsResponseVo {
-        private Long userExpendsId;
-        private UserVo user;
-        private ExpendsVos.ExpendsSimpleVo expends;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserExpendsVo {
-        private Long userId;
-        private Long expendsId;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class UserBudgetResponseVo {
         private Long userBudgetId;
         private UserVo user;
