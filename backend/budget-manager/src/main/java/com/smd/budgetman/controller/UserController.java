@@ -8,7 +8,6 @@ import com.smd.budgetman.vo.UserVos.UserRequestVo;
 import com.smd.budgetman.vo.UserVos.UserTokenResponseVo;
 import com.smd.budgetman.vo.UserVos.UserUpdateVo;
 import java.text.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/user/{userId}")
     @CrossOrigin

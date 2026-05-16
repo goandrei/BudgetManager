@@ -4,14 +4,16 @@ import com.smd.budgetman.services.BudgetService;
 import com.smd.budgetman.vo.BudgetVos.BudgetResponseVo;
 import com.smd.budgetman.vo.BudgetVos.BudgetVo;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BudgetController {
-    @Autowired
-    private BudgetService budgetService;
+    private final BudgetService budgetService;
+
+    public BudgetController(BudgetService budgetService) {
+        this.budgetService = budgetService;
+    }
 
     @GetMapping("/budget/{budgetId}")
     @CrossOrigin
