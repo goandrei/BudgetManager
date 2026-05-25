@@ -36,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUser(user: UserUpdateRequest): Response<Unit> {
-        val token = UserPreferences.tokenFlow(context).first()
+        val token = UserPreferences.getToken(context)
 
         return authApiService.updateUser("Bearer $token", user)
     }
