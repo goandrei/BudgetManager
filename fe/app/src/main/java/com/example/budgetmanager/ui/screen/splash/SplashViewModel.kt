@@ -1,7 +1,6 @@
 package com.example.budgetmanager.ui.screen.splash
 
 import android.content.Context
-import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetmanager.data.local.UserPreferences
@@ -32,7 +31,7 @@ class SplashViewModel @Inject constructor(
     private fun checkUserSession() {
         viewModelScope.launch {
             val userId = UserPreferences.userIdFlow(context).first()
-            val token = UserPreferences.tokenFlow(context).first() // Assuming you have this
+            val token = UserPreferences.getToken(context)
 
             if (userId == null || token == null) {
                 // No session found, go to Login

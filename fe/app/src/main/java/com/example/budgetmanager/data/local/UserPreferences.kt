@@ -1,26 +1,58 @@
 package com.example.budgetmanager.data.local
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_preferences")
+private val Context.dataStore by preferencesDataStore(name = "settings")
 
 object UserPreferences {
+
     private object PreferenceKeys {
         val USER_ID = longPreferencesKey("user_id")
         val PROFILE_IMAGE_PATH_KEY = stringPreferencesKey("profile_image_path")
-        val TOKEN = stringPreferencesKey("token")
+    }
+
+    private fun getEncryptedPrefs(context: Context): EncryptedSharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        return EncryptedSharedPreferences.create(
+            context,
+            "secure_user_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        ) as EncryptedSharedPreferences
+    }
+
+    suspend fun getToken(context: Context): String? = withContext(Dispatchers.IO) {
+        val prefs = getEncryptedPrefs(context)
+        prefs.getString("auth_token", null)
+    }
+
+    suspend fun saveToken(context: Context, token: String) = withContext(Dispatchers.IO) {
+        getEncryptedPrefs(context).edit().putString("auth_token", token).apply()
+    }
+
+    suspend fun clearToken(context: Context) = withContext(Dispatchers.IO) {
+        getEncryptedPrefs(context).edit().remove("auth_token").apply()
     }
 
     fun userIdFlow(context: Context): Flow<Long?> =
-        context.dataStore.data.map { preferences -> preferences[PreferenceKeys.USER_ID] }
+        context.dataStore.data.map { preferences ->
+            val id = preferences[PreferenceKeys.USER_ID]
+            if (id == -1L) null else id
+        }
 
     suspend fun saveUserId(context: Context, userId: Long) {
         context.dataStore.edit { preferences ->
@@ -29,23 +61,8 @@ object UserPreferences {
     }
 
     suspend fun clearUserId(context: Context) {
-        context.dataStore.edit { prefs ->
-            prefs.remove(PreferenceKeys.USER_ID)
-        }
-    }
-
-    fun tokenFlow(context: Context): Flow<String?> =
-        context.dataStore.data.map { preferences -> preferences[PreferenceKeys.TOKEN] }
-
-    suspend fun saveToken(context: Context, token: String) {
         context.dataStore.edit { preferences ->
-            preferences[PreferenceKeys.TOKEN] = token
-        }
-    }
-
-    suspend fun clearToken(context: Context) {
-        context.dataStore.edit { prefs ->
-            prefs.remove(PreferenceKeys.TOKEN)
+            preferences[PreferenceKeys.USER_ID] = -1L
         }
     }
 
