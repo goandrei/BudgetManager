@@ -4,7 +4,7 @@ services:
     image: postgres:15
     container_name: budget-manager-db
     environment:
-      POSTGRES_DB: budget-manager
+      POSTGRES_DB: budget
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
     ports:
